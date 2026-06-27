@@ -553,10 +553,75 @@
             }
         }
 
+        /* --- HAMBURGER BUTTON --- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background-color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        header.scrolled .hamburger span {
+            background-color: var(--primary);
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
         @media (max-width: 768px) {
-            .nav-links {
-                display: none; /* Simplification for single-file presentation */
+            .hamburger {
+                display: flex;
             }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: var(--primary);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 35px;
+                z-index: 1050;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-links a {
+                font-size: 1.1rem;
+                color: var(--text-light) !important;
+            }
+            .nav-cta {
+                border-color: var(--accent);
+                color: var(--accent) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links-placeholder { display: none; }
             .services-grid {
                 grid-template-columns: 1fr;
             }
@@ -571,6 +636,7 @@
                 font-size: 2rem;
             }
         }
+        /* end mobile */
     </style>
 </head>
 <body>
@@ -578,7 +644,12 @@
     <header id="header">
         <div class="container nav-container">
             <a href="#" class="logo">AURA</a>
-            <nav class="nav-links">
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="nav-links" id="navLinks">
                 <a href="#home" class="active">Home</a>
                 <a href="#about">About</a>
                 <a href="#services">Treatments</a>
@@ -738,6 +809,22 @@
     </footer>
 
     <script>
+        // Hamburger Menu Logic
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+
         // Sticky Header Logic
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
